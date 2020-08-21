@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
+// import { Row, Col, Label } from 'reactstrap';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,13 @@ import { getEntity, updateEntity, createEntity, reset } from './sales.reducer';
 import { ISales } from 'app/shared/model/sales.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+
+import 'fontsource-roboto';
+import { 
+  Container, Typography, TextField, InputLabel, Select } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SaveIcon from '@material-ui/icons/Save';
 
 export interface ISalesUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -53,74 +60,79 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
   };
 
   return (
-    <div>
-      <Row className="justify-content-center">
-        <Col md="8">
-          <h2 id="testApp.sales.home.createOrEditLabel">
-            <Translate contentKey="testApp.sales.home.createOrEditLabel">Create or edit a Sales</Translate>
-          </h2>
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col md="8">
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <AvForm model={isNew ? {} : salesEntity} onSubmit={saveEntity}>
+    <>
+      <Container maxWidth="sm" className="form-container">
+        <Typography variant="h3">Crear o editar una venta</Typography>
+        {
+          loading 
+          ? ( <p>Loading...</p> ) 
+          : (
+            <AvForm model={isNew ? {} : salesEntity} onSubmit={saveEntity}>              
               {!isNew ? (
-                <AvGroup>
-                  <Label for="sales-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="sales-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="descriptionLabel" for="sales-description">
-                  <Translate contentKey="testApp.sales.description">Description</Translate>
-                </Label>
-                <AvField id="sales-description" type="text" name="description" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="stateLabel" for="sales-state">
-                  <Translate contentKey="testApp.sales.state">State</Translate>
-                </Label>
-                <AvInput
-                  id="sales-state"
-                  type="select"
-                  className="form-control"
-                  name="state"
-                  value={(!isNew && salesEntity.state) || 'IN_CHARGE'}
-                >
-                  <option value="IN_CHARGE">{translate('testApp.State.IN_CHARGE')}</option>
-                  <option value="SHIPPED">{translate('testApp.State.SHIPPED')}</option>
-                  <option value="DELIVERED">{translate('testApp.State.DELIVERED')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label id="dateLabel" for="sales-date">
-                  <Translate contentKey="testApp.sales.date">Date</Translate>
-                </Label>
-                <AvField id="sales-date" type="date" className="form-control" name="date" />
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/sales" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
+                <TextField 
+                  disabled id="sales-id" type="text"
+                  label="ID" value={props.match.params.id}
+                  name="id"
+                  variant="filled" 
+                />
+               ) : null
+              }
+
+              <TextField 
+                id="sales-description" 
+                type="text" 
+                name="description" label="Description" 
+                value={(!isNew && salesEntity.description)} 
+              />
+
+              <InputLabel id="stateLabel" htmlFor="sales-state">
+              </InputLabel>
+              <Select
+                id="sales-state"
+                type="select"
+                name="state"
+                value={(!isNew && salesEntity.state) || 'IN_CHARGE'}
+              >
+                <option value="IN_CHARGE">{translate('testApp.State.IN_CHARGE')}</option>
+                <option value="SHIPPED">{translate('testApp.State.SHIPPED')}</option>
+                <option value="DELIVERED">{translate('testApp.State.DELIVERED')}</option>
+              </Select>
+              
+              <TextField
+                id="sales-date"
+                type="date"
+                label="Date"
+                name="date"
+                value={(!isNew && salesEntity.date)}
+                defaultValue="yyyy-MM-dd"
+                InputLabelProps={{ shrink: true }}
+              />
+
+              <Button
+                color="primary"
+                id="cancel-save"
+                variant="contained"
+                startIcon={<ArrowBackIcon />}
+              >
+                <Link to="/sales">Volver</Link>
               </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
+              
+              <Button
+                color="primary"
+                id="save-entity"
+                type="submit"
+                disabled={updating}
+                variant="contained"
+                startIcon={<SaveIcon />}
+              >
+                Guardar
               </Button>
+
             </AvForm>
-          )}
-        </Col>
-      </Row>
-    </div>
+          )
+        }
+      </Container>
+    </>
   );
 };
 
