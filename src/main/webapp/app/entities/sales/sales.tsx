@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Col, Row, Table } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -11,25 +11,19 @@ import { ISales } from 'app/shared/model/sales.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 
-import Paper from '@material-ui/core/Paper';
-import Table1 from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import {
+  Typography,
+  Box,
+  Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody,
+  IconButton,
+  Button,
+  Fab
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import FindInPageIcon from '@material-ui/icons/FindInPage';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export interface ISalesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -74,7 +68,7 @@ export const Sales = (props: ISalesProps) => {
         ? (
           <Paper className={classes.root}>
             <TableContainer className={classes.container}>
-              <Table1 stickyHeader aria-label="sticky table">
+              <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow className={classes.tableHead}>
                     <TableCell align="center">
@@ -149,7 +143,7 @@ export const Sales = (props: ISalesProps) => {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table1>        
+              </Table>        
             </TableContainer>
           </Paper>
         ) 
