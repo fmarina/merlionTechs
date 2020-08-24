@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-// import { Row, Col, Label } from 'reactstrap';
+import { Row, Col, Label } from 'reactstrap';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,15 +14,26 @@ import { mapIdList } from 'app/shared/util/entity-utils';
 
 import 'fontsource-roboto';
 import { 
-  Container, Typography, TextField, InputLabel, Select } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+  Grid, 
+  Typography, 
+  TextField,
+  Button,
+  makeStyles
+} from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SaveIcon from '@material-ui/icons/Save';
 
 export interface ISalesUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
+
+const useStyle = makeStyles((theme) => ({
+}));
+
+
 export const SalesUpdate = (props: ISalesUpdateProps) => {
+
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const classes = useStyle();
 
   const { salesEntity, loading, updating } = props;
 
@@ -60,79 +71,88 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
   };
 
   return (
-    <>
-      <Container maxWidth="sm" className="form-container">
-        <Typography variant="h3">Crear o editar una venta</Typography>
-        {
-          loading 
-          ? ( <p>Loading...</p> ) 
-          : (
-            <AvForm model={isNew ? {} : salesEntity} onSubmit={saveEntity}>              
+    <Grid 
+      container
+      direction="column"
+      justify="space-evenly"
+      alignItems="center"
+    >
+      <Grid item xs={12}>
+        <Typography variant="h5">Crear o editar una venta</Typography>
+      </Grid>
+      {
+        loading 
+        ? ( <p>Loading...</p>)
+        : (      
+          <AvForm model={isNew ? {} : salesEntity} onSubmit={saveEntity}>
+            <Grid item xs={6}>
               {!isNew ? (
-                <TextField 
-                  disabled id="sales-id" type="text"
-                  label="ID" value={props.match.params.id}
-                  name="id"
-                  variant="filled" 
-                />
-               ) : null
+                <Grid item xs={6} spacing={5}>
+                  <TextField 
+                    disabled 
+                    id="sales-id" 
+                    type="text"
+                    label="ID" value={props.match.params.id}
+                    name="id"
+                    variant="outlined" 
+                  />
+                </Grid>
+                ) : null
               }
-
+            
               <TextField 
                 id="sales-description" 
                 type="text" 
                 name="description" label="Description" 
                 value={(!isNew && salesEntity.description)} 
+                variant="outlined"
               />
 
-              <InputLabel id="stateLabel" htmlFor="sales-state">
-              </InputLabel>
-              <Select
+              <AvInput
                 id="sales-state"
                 type="select"
+                className="form-control"
                 name="state"
                 value={(!isNew && salesEntity.state) || 'IN_CHARGE'}
               >
-                <option value="IN_CHARGE">{translate('testApp.State.IN_CHARGE')}</option>
-                <option value="SHIPPED">{translate('testApp.State.SHIPPED')}</option>
-                <option value="DELIVERED">{translate('testApp.State.DELIVERED')}</option>
-              </Select>
+                <option value="IN_CHARGE">IN_CHARGE</option>
+                <option value="SHIPPED">SHIPPED</option>
+                <option value="DELIVERED">DELIVERED</option>
+              </AvInput>
               
               <TextField
                 id="sales-date"
                 type="date"
-                label="Date"
                 name="date"
                 value={(!isNew && salesEntity.date)}
-                defaultValue="yyyy-MM-dd"
-                InputLabelProps={{ shrink: true }}
+                variant="outlined"
               />
 
-              <Button
-                color="primary"
-                id="cancel-save"
-                variant="contained"
-                startIcon={<ArrowBackIcon />}
-              >
-                <Link to="/sales">Volver</Link>
-              </Button>
-              
-              <Button
-                color="primary"
-                id="save-entity"
-                type="submit"
-                disabled={updating}
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                Guardar
-              </Button>
+            </Grid>
 
-            </AvForm>
-          )
-        }
-      </Container>
-    </>
+            <Button
+              color="primary"
+              id="cancel-save"
+              variant="contained"
+              startIcon={<ArrowBackIcon />}
+            >
+              <Link to="/sales">Volver</Link>
+            </Button>
+            
+            <Button
+              color="primary"
+              id="save-entity"
+              type="submit"
+              disabled={updating}
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
+              Guardar
+            </Button>
+          </AvForm>
+        )
+      }
+    </Grid>
   );
 };
 
