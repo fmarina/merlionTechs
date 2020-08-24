@@ -23,6 +23,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 
 export interface ISalesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -61,17 +65,25 @@ export const Sales = (props: ISalesProps) => {
             <TableContainer className={classes.container}>
               <Table1 stickyHeader aria-label="sticky table">
                 <TableHead>
-                  <TableRow>             
-                      <TableCell> ID </TableCell>
-                      <TableCell> Description </TableCell>
-                      <TableCell> State </TableCell>
-                      <TableCell> Date </TableCell>
+                  <TableRow>
+                    <TableCell> Actions </TableCell>                  
+                    <TableCell> Id </TableCell>
+                    <TableCell> Description </TableCell>
+                    <TableCell> State </TableCell>
+                    <TableCell> Date </TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  {salesList.map((sales, i) => (
+                  {salesList.map((sales, i) => (                    
                     <TableRow key={`entity-${i}`} hover role="checkbox" tabIndex={-1}>
+
+                      <TableCell>
+                        <IconButton aria-label="findinpage"><FindInPageIcon fontSize="small"/></IconButton>
+                        <IconButton aria-label="delete"><EditIcon fontSize="small" /></IconButton>
+                        <IconButton aria-label="delete"><DeleteIcon fontSize="small" /></IconButton>
+                      </TableCell>
+
                       <TableCell>
                         <Button tag={Link} to={`${match.url}/${sales.id}`} color="link" size="sm">
                           {sales.id}
@@ -101,7 +113,7 @@ export const Sales = (props: ISalesProps) => {
                 <Translate contentKey="testApp.sales.home.notFound">No Sales found</Translate>
               </div>
             )
-        )
+          )
       }
       </div>
     </div>
