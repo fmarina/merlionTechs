@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -9,9 +9,13 @@ import { ISales } from 'app/shared/model/sales.model';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity, deleteEntity } from './sales.reducer';
 
+import {Button, Typography} from '@material-ui/core';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
 export interface ISalesDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const SalesDeleteDialog = (props: ISalesDeleteDialogProps) => {
+
   useEffect(() => {
     props.getEntity(props.match.params.id);
   }, []);
@@ -31,26 +35,28 @@ export const SalesDeleteDialog = (props: ISalesDeleteDialogProps) => {
   };
 
   const { salesEntity } = props;
+
   return (
     <Modal isOpen toggle={handleClose}>
       <ModalHeader toggle={handleClose}>
-        <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
+        <Typography variant="h5" color="primary">
+          <Translate contentKey="entity.delete.title" />
+        </Typography>
       </ModalHeader>
+
       <ModalBody id="testApp.sales.delete.question">
-        <Translate contentKey="testApp.sales.delete.question" interpolate={{ id: salesEntity.id }}>
-          Are you sure you want to delete this Sales?
-        </Translate>
+        <Typography variant="h6">
+          <Translate contentKey="testApp.sales.delete.question" interpolate={{ id: salesEntity.id }} />
+        </Typography>
       </ModalBody>
       <ModalFooter>
-        <Button color="secondary" onClick={handleClose}>
-          <FontAwesomeIcon icon="ban" />
-          &nbsp;
-          <Translate contentKey="entity.action.cancel">Cancel</Translate>
-        </Button>
-        <Button id="jhi-confirm-delete-sales" color="danger" onClick={confirmDelete}>
-          <FontAwesomeIcon icon="trash" />
-          &nbsp;
-          <Translate contentKey="entity.action.delete">Delete</Translate>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<DeleteForeverIcon />}
+          onClick={confirmDelete}          
+        >
+          <Translate contentKey="entity.action.delete"/> 
         </Button>
       </ModalFooter>
     </Modal>

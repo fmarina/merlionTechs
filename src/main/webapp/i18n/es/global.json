@@ -7,7 +7,7 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entidades",
-        "sales": "Sales",
+        "sales": "Ventas",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -106,7 +106,7 @@
       "value": "Valor"
     },
     "delete": {
-      "title": "Confirmar operación de borrado"
+      "title": "Eliminar venta"
     },
     "validation": {
       "required": "Este campo es obligatorio.",
@@ -136,5 +136,5 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "Pie de página"
+  "footer": "footer"
 }
