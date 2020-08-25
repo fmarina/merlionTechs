@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
+import { Row, Col, Label } from 'reactstrap';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
@@ -12,10 +12,73 @@ import { ISales } from 'app/shared/model/sales.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
+import {
+  Grid, 
+  Typography, 
+  Box, 
+  TextField, 
+  FormControl, 
+  InputLabel, 
+  Select, 
+  MenuItem, 
+  Button
+} from '@material-ui/core';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SaveIcon from '@material-ui/icons/Save';
+
 export interface ISalesUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+        width: '25ch',
+      },
+    },
+    
+    title: {
+      color: '#2c6c9c',
+    },
+
+    paper: {
+      padding: theme.spacing(1),
+      marginTop: theme.spacing(1),
+      textAlign: 'left',
+      color: theme.palette.text.secondary,
+      fontSize: '18px'
+    },
+
+    button: {
+      backgroundColor: '#1a5b89',
+      color: '#ffffff',
+      "&:hover": {
+        backgroundColor: '#2c6c9c',
+        color: '#ffffff'
+      },
+      margin: theme.spacing(2)
+    },
+
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
+    },
+  })
+);
+
 export const SalesUpdate = (props: ISalesUpdateProps) => {
+
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const classes = useStyles();
+  const [selectedDate, handleDateChange] = useState(new Date());
 
   const { salesEntity, loading, updating } = props;
 
@@ -54,72 +117,96 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
 
   return (
     <>
-      <Row className="justify-content-center">
-        <Col md="8">
-          <h2 id="testApp.sales.home.createOrEditLabel">
-            <Translate contentKey="testApp.sales.home.createOrEditLabel">Create or edit a Sales</Translate>
-          </h2>
-        </Col>
-      </Row>
-      <Row className="justify-content-center">
-        <Col md="8">
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <AvForm model={isNew ? {} : salesEntity} onSubmit={saveEntity}>
-              {!isNew ? (
-                <AvGroup>
-                  <Label for="sales-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="sales-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="descriptionLabel" for="sales-description">
-                  <Translate contentKey="testApp.sales.description">Description</Translate>
-                </Label>
-                <AvField id="sales-description" type="text" name="description" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="stateLabel" for="sales-state">
-                  <Translate contentKey="testApp.sales.state">State</Translate>
-                </Label>
-                <AvInput
-                  id="sales-state"
-                  type="select"
-                  className="form-control"
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="stretch"
+    >
+      <Typography variant="h4" align="center" component="h1" className={classes.title} gutterBottom>
+        <Box fontWeight="fontWeightBold" letterSpacing={1}>Crear o editar venta</Box>
+      </Typography>
+      
+      { loading 
+        ? ( <><CircularProgress /> <p>Loading...</p></> ) 
+        : (
+          <AvForm model={isNew ? {} : salesEntity} onSubmit={saveEntity}>
+          { !isNew 
+            ? (
+                <Grid item xs={12}>
+                   <TextField 
+                    disabled 
+                    id="sales-id"
+                    label="Id" 
+                    name="id" 
+                    variant="outlined"
+                    value={salesEntity.id}
+                  />
+                </Grid>
+              ) 
+            : null
+          }
+          <Grid item xs={12}>
+            <TextField 
+              id="sales-description" 
+              type="text" 
+              name="description"
+              label="Description" 
+              variant="outlined"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="sales-state">State</InputLabel>
+                <Select
+                  labelId="sales-state"
+                  id="demo-simple-select-outlined"
                   name="state"
                   value={(!isNew && salesEntity.state) || 'IN_CHARGE'}
+                  label="State111"
                 >
-                  <option value="IN_CHARGE">{translate('testApp.State.IN_CHARGE')}</option>
-                  <option value="SHIPPED">{translate('testApp.State.SHIPPED')}</option>
-                  <option value="DELIVERED">{translate('testApp.State.DELIVERED')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label id="dateLabel" for="sales-date">
-                  <Translate contentKey="testApp.sales.date">Date</Translate>
-                </Label>
-                <AvField id="sales-date" type="date" className="form-control" name="date" />
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/sales" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </span>
-              </Button>
-              &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save" />
-                &nbsp;
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </AvForm>
-          )}
-        </Col>
-      </Row>
+                  <MenuItem value="IN_CHARGE">IN_CHARGE</MenuItem>
+                  <MenuItem value="SHIPPED">SHIPPED</MenuItem>
+                  <MenuItem value="DELIVERED">DELIVERED</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                id="date"
+                label="Date"
+                type="date"
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />            
+              {/*<AvField id="sales-date" type="date" className="form-control" name="date" /></AvGroup> */}
+            </Grid>
+
+            <Grid container  justify="center" alignItems="center">
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<ArrowBackIcon />}
+                href="/sales"
+              > Volver </Button>
+              <Button
+                variant="contained"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+                type="submit" 
+                disabled={updating}          
+              > Guardar </Button>
+            </Grid>
+
+          </AvForm>
+        )
+      }
+    </Grid>    
     </>
   );
 };
