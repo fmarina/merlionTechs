@@ -53,7 +53,7 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
   };
 
   return (
-    <div>
+    <>
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="testApp.sales.home.createOrEditLabel">
@@ -120,7 +120,7 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
           )}
         </Col>
       </Row>
-    </div>
+    </>
   );
 };
 
