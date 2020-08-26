@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Row, Col, Label } from 'reactstrap';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction} from 'react-jhipster';
+import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction, TextFormat} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 import { getEntity, updateEntity, createEntity, reset } from './sales.reducer';
 import { ISales } from 'app/shared/model/sales.model';
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
     
     title: {
       color: '#2c6c9c',
+      marginBottom: theme.spacing(5),
     },
 
     paper: {
@@ -59,7 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#2c6c9c',
         color: '#ffffff'
       },
-      margin: theme.spacing(2)
+      margin: theme.spacing(2),
+      '& label.Mui-focused': {
+        color: '#ff0000',
+      },
     },
 
     formControl: {
@@ -70,18 +75,29 @@ const useStyles = makeStyles((theme: Theme) =>
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 200,
-    },
+      marginBottom: theme.spacing(2),
+      width: 350,
+    }
   })
 );
 
 export const SalesUpdate = (props: ISalesUpdateProps) => {
 
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);  
   const classes = useStyles();
-  const [selectedDate, handleDateChange] = useState(new Date());
 
   const { salesEntity, loading, updating } = props;
+  
+  const [state, setState] = React.useState<string>("IN_CHARGE");
+  const [description, setDescription] = React.useState<string>("")
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setState(event.target.value as string);
+  };
+
+  const handleChangeDesc =  (event: React.ChangeEvent<{ value: unknown }>) => {
+    setDescription(event.target.value as string);
+  }
 
   const handleClose = () => {
     props.history.push('/sales');
@@ -122,6 +138,7 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
       direction="column"
       justify="center"
       alignItems="stretch"
+      style={{width: '80%', margin: 'auto', textAlign: 'center'}}
     >
       <Typography variant="h4" align="center" component="h1" className={classes.title} gutterBottom>
         <Box fontWeight="fontWeightBold" letterSpacing={1}>Crear o editar venta</Box>
@@ -141,6 +158,7 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
                     name="id" 
                     variant="outlined"
                     value={salesEntity.id}
+                    className={classes.textField}
                   />
                 </Grid>
               ) 
@@ -153,18 +171,23 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
               name="description"
               label="Description" 
               variant="outlined"
-              />
-            </Grid>
+              className={classes.textField}
+              value={(!isNew ? salesEntity.description : description)}
+              onChange={handleChangeDesc}
+            />
+          </Grid>
 
             <Grid item xs={12}>
               <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="sales-state">State</InputLabel>
+                <InputLabel id="sales-state"> State</InputLabel>
                 <Select
                   labelId="sales-state"
                   id="demo-simple-select-outlined"
                   name="state"
-                  value={(!isNew && salesEntity.state) || 'IN_CHARGE'}
-                  label="State111"
+                  onChange={handleChange}
+                  value={(!isNew ? salesEntity.state : state)}
+                  label="State"
+                  className={classes.textField}
                 >
                   <MenuItem value="IN_CHARGE">IN_CHARGE</MenuItem>
                   <MenuItem value="SHIPPED">SHIPPED</MenuItem>
@@ -174,16 +197,9 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                id="date"
-                label="Date"
-                type="date"
-                className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />            
-              {/*<AvField id="sales-date" type="date" className="form-control" name="date" /></AvGroup> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <AvField id="sales-date" type="date" className={classes.textField} name="date" />
+              </FormControl>
             </Grid>
 
             <Grid container  justify="center" alignItems="center">
